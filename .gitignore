@@ -1,2 +1,2 @@
 vendor
-tests/codeception/_log/*-*
+tests/_log/*-*
