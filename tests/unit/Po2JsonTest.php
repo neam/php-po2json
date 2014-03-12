@@ -22,14 +22,16 @@ class Po2JsonTest extends \Codeception\TestCase\Test
     // tests
     public function testParse()
     {
-        $expected = file_get_contents($this->_fixturesPath . 'pl.json');
+        $expected = json_encode(json_decode(file_get_contents($this->_fixturesPath . 'pl.json')));
+        $expected = str_replace("_empty_", "", $expected);
         $result = \neam\po2json\Po2Json::toJSON($this->_fixturesPath . 'pl.po');
         $this->assertEquals($expected, $result);
     }
 
     public function testParseWithJedFormat()
     {
-        $expected = file_get_contents($this->_fixturesPath . 'pl-jed.json');
+        $expected = json_encode(json_decode(file_get_contents($this->_fixturesPath . 'pl-jed.json')));
+        $expected = str_replace("_empty_", "", $expected);
         $result = \neam\po2json\Po2Json::toJSON($this->_fixturesPath . 'pl.po', null, "jed");
         $this->assertEquals($expected, $result);
     }
