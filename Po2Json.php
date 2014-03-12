@@ -81,7 +81,7 @@ class Po2Json
             $jed["locale_data"][$domain] = $result;
             $jed["locale_data"][$domain][""] = array(
                 "domain" => $domain,
-                "plural_forms" => $result[""]["plural-forms"],
+                "plural_forms" => isset($result[""]["plural-forms"]) ? $result[""]["plural-forms"] : null,
                 "lang" => $result[""]["language"],
             );
             $result = $jed;
