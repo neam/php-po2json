@@ -37,7 +37,7 @@ class Po2Json
                 isset($t["msgstr"][1]) ? ($entry[2] = $t["msgstr"][1]) : null;
                 isset($t["msgstr"][2]) ? ($entry[3] = $t["msgstr"][2]) : null;
             } else {
-                $entry[0] = isset($t["msgid_plural"]) ? $t["msgid_plural"][0] : null;
+                $entry[0] = null;
                 $entry[1] = implode("", $t["msgstr"]);
             }
 
