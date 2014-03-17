@@ -28,7 +28,6 @@ class Po2Json
         $result[""] = $headers;
 
         // Create gettext/Jed compatible JSON from parsed data
-        $return = array();
         foreach ($translations as $translationKey => $t) {
 
             $entry = array();
