@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9704aadca478c42b26a1a6e2609060d3",
+    "hash": "1d4a77fa3040b9142489089e69c30737",
     "packages": [
         {
             "name": "sepia/po-parser",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/raulferras/PHP-po-parser.git",
-                "reference": "599ed636b5030572a9c4f1671abaca915831ca85"
+                "url": "https://github.com/Gapminder/PHP-po-parser.git",
+                "reference": "16d1def1f1a2550d3ee8720d7d63474450c43ab4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raulferras/PHP-po-parser/zipball/599ed636b5030572a9c4f1671abaca915831ca85",
-                "reference": "599ed636b5030572a9c4f1671abaca915831ca85",
+                "url": "https://api.github.com/repos/Gapminder/PHP-po-parser/zipball/16d1def1f1a2550d3ee8720d7d63474450c43ab4",
+                "reference": "16d1def1f1a2550d3ee8720d7d63474450c43ab4",
                 "shasum": ""
             },
             "require-dev": {
@@ -29,7 +29,6 @@
                     "Sepia": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -48,7 +47,11 @@
                 "i18n",
                 "po"
             ],
-            "time": "2014-03-10 11:45:30"
+            "support": {
+                "issues": "https://github.com/raulferras/PHP-po-parser/issues",
+                "source": "https://github.com/Gapminder/PHP-po-parser/tree/master"
+            },
+            "time": "2014-03-17 04:07:41"
         }
     ],
     "packages-dev": [

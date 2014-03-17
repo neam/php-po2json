@@ -11,7 +11,12 @@
             "email": "fredrik@neam.se"
         }
     ],
-    "repositories": [],
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"https://github.com/Gapminder/PHP-po-parser.git"
+        }
+    ],
     "autoload": {
         "classmap": ["."]
     },

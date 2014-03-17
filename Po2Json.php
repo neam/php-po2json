@@ -5,6 +5,21 @@ namespace neam\po2json;
 class Po2Json
 {
 
+    static public function parseVariable(
+        $contents,
+        $fuzzy = false,
+        $format = 'raw',
+        $domain = 'messages'
+    ) {
+
+        // Parse po contents
+        $poparser = new \Sepia\PoParser();
+        $translations = $poparser->readVariable($contents);
+        $_headers = self::parseHeaders($poparser->headers());
+        return self::convertToJson($_headers, $translations, $fuzzy, $format, $domain);
+
+    }
+
     static public function parseFile(
         $path,
         $fuzzy = false,
@@ -15,8 +30,18 @@ class Po2Json
         // Parse po file
         $poparser = new \Sepia\PoParser();
         $translations = $poparser->read($path);
-
         $_headers = self::parseHeaders($poparser->headers());
+        return self::convertToJson($_headers, $translations, $fuzzy, $format, $domain);
+
+    }
+
+    static public function convertToJson(
+        $_headers,
+        $translations,
+        $fuzzy = false,
+        $format = 'raw',
+        $domain = 'messages'
+    ) {
 
         $headers = array();
         foreach ($_headers as $key => $value) {
