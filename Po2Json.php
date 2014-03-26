@@ -127,7 +127,7 @@ class Po2Json
 
     }
 
-    static protected function parseHeaders($headers)
+    static public function parseHeaders($headers)
     {
         foreach ($headers as &$h) {
             $h = trim($h, "\"\n");
