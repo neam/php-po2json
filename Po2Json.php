@@ -13,10 +13,10 @@ class Po2Json
     ) {
 
         // Parse po contents
-        $poparser = new \Sepia\PoParser();
-        $translations = $poparser->readVariable($contents);
-        $_headers = self::parseHeaders($poparser->headers());
-        return self::convertToJson($_headers, $translations, $fuzzy, $format, $domain);
+        $stringHandler = new \Sepia\PoParser\SourceHandler\StringSource($contents);
+        $poparser = new \Sepia\PoParser\Parser($stringHandler);
+        $catalog = $poparser->parse();
+        return self::convertToJson($catalog, $fuzzy, $format, $domain);
 
     }
 
@@ -28,23 +28,22 @@ class Po2Json
     ) {
 
         // Parse po file
-        $poparser = new \Sepia\PoParser();
-        $translations = $poparser->read($path);
-        $_headers = self::parseHeaders($poparser->headers());
-        return self::convertToJson($_headers, $translations, $fuzzy, $format, $domain);
+        $fileHandler = new \Sepia\PoParser\SourceHandler\FileSystem($path);
+        $poparser = new \Sepia\PoParser\Parser($fileHandler);
+        $catalog = $poparser->parse();
+        return self::convertToJson($catalog, $fuzzy, $format, $domain);
 
     }
 
     static public function convertToJson(
-        $_headers,
-        $translations,
+        $catalog,
         $fuzzy = false,
         $format = 'raw',
         $domain = 'messages'
     ) {
 
         $headers = array();
-        foreach ($_headers as $key => $value) {
+        foreach (self::parseHeaders($catalog->getHeaders()) as $key => $value) {
             $key = strtolower($key);
             $headers[$key] = $value;
         }
@@ -53,36 +52,26 @@ class Po2Json
         $result[""] = $headers;
 
         // Create gettext/Jed compatible JSON from parsed data
-        foreach ($translations as $translationKey => $t) {
-
-            $entry = array();
-            if (isset($t["msgid_plural"])) {
-                $entry[0] = isset($t["msgid_plural"]) ? $t["msgid_plural"][0] : null;
-                $entry[1] = $t["msgstr"][0];
-                isset($t["msgstr"][1]) ? ($entry[2] = $t["msgstr"][1]) : null;
-                isset($t["msgstr"][2]) ? ($entry[3] = $t["msgstr"][2]) : null;
-            } else {
-                $entry[0] = null;
-                $entry[1] = implode("", $t["msgstr"]);
-            }
+        foreach ($catalog->getEntries() as $entry) {
 
             // msg id json format
-            if ($t["msgid"][0] == '' && isset($t["msgid"][1])) {
-                array_shift($t["msgid"]);
-                $msgid = implode("", $t["msgid"]);
+            if ($entry->isPlural()) {
+                $msg = array_merge(
+                  array($entry->getMsgIdPlural()),
+                  $entry->getMsgStrPlurals()
+                );
             } else {
-                $msgid = implode("", $t["msgid"]);
+                $msg = array(null, $entry->getMsgStr());
             }
 
             // json object key based on msd id and context
-            if (isset($t["msgctxt"][0])) {
-                $key = $t["msgctxt"][0] . "\x04" . $msgid;
-            } else {
-                $key = $msgid;
-            }
+            $msgid = $entry->getMsgId();
+            $msgctxt = $entry->getMsgCtxt();
+            if ($msgctxt)
+                $msgid = "$msgctxt\x04$msgid";
 
             // do not include fuzzy messages if not wanted
-            if (!empty($t["fuzzy"])) {
+            if ($entry->isFuzzy()) {
                 if (!$fuzzy) {
                     continue;
                 } else {
@@ -92,7 +81,7 @@ class Po2Json
                 }
             }
 
-            $result[$key] = $entry;
+            $result[$msgid] = $msg;
 
         }
 
@@ -129,48 +118,11 @@ class Po2Json
 
     static public function parseHeaders($headers)
     {
-        foreach ($headers as &$h) {
-            $h = trim($h, "\"\n");
-        }
-        $raw = implode("", $headers);
-        $raw = str_replace('\n', "\n", $raw);
-        return self::parse_http_headers($raw);
+        $result = array();
+        foreach($headers as $h)
+            if (preg_match('/^([^:]+): *(.*)$/', $h, $m))
+                $result[$m[1]] = $m[2];
+        return $result;
     }
 
-    /**
-     * From http://stackoverflow.com/a/20933560/682317
-     * @param $raw_headers
-     * @return array
-     */
-    static protected function parse_http_headers($raw_headers)
-    {
-
-        $headers = array();
-        $key = '';
-
-        foreach (explode("\n", $raw_headers) as $i => $h) {
-            $h = explode(':', $h, 2);
-
-            if (isset($h[1])) {
-                if (!isset($headers[$h[0]])) {
-                    $headers[$h[0]] = trim($h[1]);
-                } elseif (is_array($headers[$h[0]])) {
-                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
-                } else {
-                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
-                }
-
-                $key = $h[0];
-            } else {
-                if (substr($h[0], 0, 1) == "\t") {
-                    $headers[$key] .= "\r\n\t" . trim($h[0]);
-                } elseif (!$key) {
-                    $headers[0] = trim($h[0]);
-                }
-            }
-        }
-
-        return $headers;
-    }
-
-} 
+}

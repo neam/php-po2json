@@ -11,20 +11,16 @@
             "email": "fredrik@neam.se"
         }
     ],
-    "repositories": [
-        {
-            "type":"vcs",
-            "url":"https://github.com/Gapminder/PHP-po-parser.git"
-        }
-    ],
     "autoload": {
         "classmap": ["."]
     },
     "require": {
         "php": ">=5.3.0",
-        "sepia/po-parser": "dev-master"
+        "sepia/po-parser": "^6.0"
     },
     "require-dev": {
-        "codeception/codeception": "~1.8.3"
+        "codeception/codeception": "~4.1.31",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
     }
 }

@@ -1,12 +1,11 @@
 <?php
-use Codeception\Util\Stub;
 
-class Po2JsonTest extends \Codeception\TestCase\Test
+class Po2JsonTest extends \Codeception\Test\Unit
 {
     /**
-     * @var \CodeGuy
+     * @var \UnitTester
      */
-    protected $codeGuy;
+    protected $tester;
 
     protected $_fixturesPath;
 
