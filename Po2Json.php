@@ -121,7 +121,7 @@ class Po2Json
         $result = array();
         foreach($headers as $h)
             if (preg_match('/^([^:]+): *(.*)$/', $h, $m))
-                $result[strtolower($m[1])] = $m[2];
+                $result[$m[1]] = $m[2];
         return $result;
     }
 
